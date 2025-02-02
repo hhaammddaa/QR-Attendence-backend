@@ -29,7 +29,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 # Configure CORS with specific origins
-CORS(app, origins=Config.ALLOWED_ORIGINS)
+CORS(app, origins=Config.ALLOWED_ORIGINS, supports_credentials=True)
 
 # Configure rate limiting
 limiter = Limiter(
@@ -206,7 +206,7 @@ def mark_attendance() -> Response:
         logger.error(f"Unexpected error: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
-@app.route('', methods=['GET'])
+@app.route('/api/get_attendance', methods=['GET'])
 @limiter.limit(f"{Config.MAX_REQUESTS_PER_MINUTE}/minute")
 def get_attendance() -> Response:
     try:
